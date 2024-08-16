@@ -120,8 +120,8 @@ begin
     U3: draw 
     port map(
         vidon => vidon,
-        is_body => sw(0),
-        is_food => sw(1),
+        is_body => is_body,
+        is_food => is_apple,
         is_head => is_head,
         vgaRed => vgaRed,
         vgaGreen => vgaGreen,

@@ -4,7 +4,8 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity random_number_gen is
 Generic(
-    max: integer := 640
+    max: integer := 640;
+    step: integer := 20
 );
 Port (
     clk: in std_logic;
@@ -22,10 +23,10 @@ begin
 process (clk)
 begin
     if rising_edge(clk) then
-        if s_random_number = to_unsigned(max, 16) then
+        if s_random_number >= to_unsigned(max, 16) then
             s_random_number <= (others => '0');
         else
-            s_random_number <= s_random_number + 1; -- must be inside else statement otherwise checked simultaneous and never eq max
+            s_random_number <= s_random_number + to_unsigned(step, 16); -- must be inside else statement otherwise checked simultaneous and never eq max
         end if;                            
     end if;
 end process;
