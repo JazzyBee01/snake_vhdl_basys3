@@ -54,16 +54,18 @@ vgaGreen <= "0000";
 vgaBlue <= "0000";
 
 if (vidon = '1') then
-    if (is_head = '1' or is_body = '1') then
+    if (is_head = '1') then
         vgaRed <= "1111";
         vgaGreen <= "1111";
         vgaBlue <= "1111";
-    
     elsif (is_food  = '1') then
         vgaRed <= "1111";
         vgaGreen <= "0000";
         vgaBlue <= "0000";
-    
+   elsif (is_body  = '1') then
+        vgaRed <= "1111";
+        vgaGreen <= "1111";
+        vgaBlue <= "1111";
     else
         vgaRed <= "0000";
         vgaGreen <= "0011";

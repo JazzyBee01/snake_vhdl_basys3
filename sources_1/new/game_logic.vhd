@@ -27,7 +27,7 @@ Generic(
 --    border_width: integer;
 --    apple_width: integer;
     head_width: integer:= 20;
---    snake_max_length: integer;
+    snake_length_max: integer:= 100;
     snake_begin_length: integer:= 5;
 --    snake_begin_x: integer;
 --    snake_begin_y: integer;
@@ -66,12 +66,14 @@ architecture Behavioral of game_logic is
                 snake_begin_pos_y: integer := 20;
                 head_width: integer := 20;
                 screen_width: integer := 640;
-                screen_height: integer := 480
+                screen_height: integer := 480;
+                snake_length_max: integer := snake_length_max
                 );
         Port ( clk : in STD_LOGIC;
                 reset : in STD_LOGIC;
                 direction : in STD_LOGIC_VECTOR (1 downto 0);
-                head_xy : out std_logic_vector(31 downto 0)
+                head_xy : out std_logic_vector(31 downto 0);
+                snake_body_xy: out xys (0 to snake_length_max - 1)
                 );
     end component;
     
@@ -98,12 +100,23 @@ architecture Behavioral of game_logic is
            is_draw: out std_logic);
     end component;
     
+    component draw_xys is
+    Generic (component_xys_length: integer := 100);
+    Port ( 
+           clk: in std_logic;
+           hc : in STD_LOGIC_vector(9 downto 0);
+           vc : in STD_LOGIC_vector(9 downto 0);
+           component_xys : in xys (0 to component_xys_length -1 );
+           is_draw: out std_logic);
+    end component;
+    
 signal head_xy_p1: std_logic_vector(31 downto 0);
 signal apple_xy: std_logic_vector(31 downto 0);
 signal food_xy: std_logic_vector(31 downto 0);
 signal rand_xy: std_logic_vector(31 downto 0);
 signal u_score_p1: unsigned(15 downto 0);
 signal u_snake_length: unsigned(15 downto 0);
+signal snake_body_xy: xys (0 to snake_length_max -1);
 
 begin
     reset_process: process (reset)
@@ -120,7 +133,8 @@ begin
     Port map( clk => clk,
            reset =>   reset,
            direction => direction_p1,
-           head_xy => head_xy_p1 );
+           head_xy => head_xy_p1,
+           snake_body_xy => snake_body_xy );
            
     draw_head: draw_components
     Port map( 
@@ -128,7 +142,7 @@ begin
            hc => hcount,
            vc => vcount,
            component_xy => head_xy_p1,
-           is_draw => is_body
+           is_draw => is_head
     );
     
     draw_food: draw_components
@@ -139,6 +153,16 @@ begin
            component_xy => food_xy,
            is_draw => is_apple
     );
+    
+    draw_body: draw_xys
+    Port map(
+        clk => clk,
+        hc => hcount,
+        vc => vcount,
+        component_xys => snake_body_xy,
+         is_draw => is_body
+        );
+    
            
     set_food: process(reset, clk, food_xy, head_xy_p1)
         variable dx, dy : signed (15 downto 0);
@@ -158,16 +182,17 @@ begin
     end process;
     
     rand_x_generator: random_number_gen
-    generic map (max => 640)
+    generic map (max => 640 - head_width)
     port map ( 
         clk => clk,
         random_number => rand_xy(31 downto 16) );
     
     rand_y_generator: random_number_gen
-    generic map (max => 480)
+    generic map (max => 480 - head_width)
     port map ( 
         clk => clk,
-        random_number => rand_xy (15 downto 0));                       
+        random_number => rand_xy (15 downto 0));   
+                         
         
 
 end Behavioral;
