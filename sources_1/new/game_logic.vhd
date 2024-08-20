@@ -22,17 +22,17 @@ use work.common.ALL;
 
 entity game_logic is
 Generic(
---    screen_width: integer;
---    screen_height: integer;
+    screen_width: integer:= 640;
+    screen_height: integer:= 480;
 --    border_width: integer;
 --    apple_width: integer;
-    head_width: integer:= 20;
+    head_width: integer:= 40;
     snake_length_max: integer:= 100;
-    snake_begin_length: integer:= 5;
---    snake_begin_x: integer;
---    snake_begin_y: integer;
-    food_begin_x: integer:= 100;
-    food_begin_y: integer:=100);
+    snake_begin_length: integer:= 1;
+    snake_begin_x: integer:= 40;
+    snake_begin_y: integer:= 40;
+    food_begin_x: integer:= 120;
+    food_begin_y: integer:=120);
     
 Port (
     clk: in std_logic;
@@ -62,11 +62,11 @@ architecture Behavioral of game_logic is
 
     component move_snake is
         Generic (   
-                snake_begin_pos_x: integer := 20;
-                snake_begin_pos_y: integer := 20;
-                head_width: integer := 20;
-                screen_width: integer := 640;
-                screen_height: integer := 480;
+                snake_begin_pos_x: integer := snake_begin_x;
+                snake_begin_pos_y: integer := snake_begin_y;
+                head_width: integer := head_width;
+                screen_width: integer := screen_width;
+                screen_height: integer := screen_height;
                 snake_length_max: integer := snake_length_max
                 );
         Port ( clk : in STD_LOGIC;
@@ -80,7 +80,7 @@ architecture Behavioral of game_logic is
     component random_number_gen is
         Generic(
             max: integer := 640;
-            step: integer := 20);
+            step: integer := head_width);
         Port (
             clk: in std_logic;
             random_number: out std_logic_vector(15 downto 0));
@@ -90,7 +90,7 @@ architecture Behavioral of game_logic is
     Generic (
            hc_offset: integer:= 144;
            vc_offset: integer:= 35;
-           component_width: integer:= 20
+           component_width: integer:= head_width
     );
     Port ( 
            clk: in std_logic;
@@ -101,12 +101,17 @@ architecture Behavioral of game_logic is
     end component;
     
     component draw_xys is
-    Generic (component_xys_length: integer := 100);
+    Generic (
+        component_xys_length: integer := snake_length_max;
+        hc_offset: integer:= 144;
+        vc_offset: integer:= 35;
+        component_width: integer:= head_width);
     Port ( 
            clk: in std_logic;
            hc : in STD_LOGIC_vector(9 downto 0);
            vc : in STD_LOGIC_vector(9 downto 0);
            component_xys : in xys (0 to component_xys_length -1 );
+           valid_length: in unsigned (15 downto 0);
            is_draw: out std_logic);
     end component;
     
@@ -119,14 +124,24 @@ signal u_snake_length: unsigned(15 downto 0);
 signal snake_body_xy: xys (0 to snake_length_max -1);
 
 begin
-    reset_process: process (reset)
+    
+    set_food: process(reset, clk, food_xy, head_xy_p1)
+        variable dx, dy : signed (15 downto 0);
     begin
-    if reset = '1' then
-        
-        -- snake is reset with reset signal 
-        u_score_p1 <= to_unsigned(0, 16);
-        u_snake_length <= to_unsigned(snake_begin_length, 16);
-    end if;
+        dx := abs(signed(food_xy(31 downto 16)) - signed(head_xy_p1(31 downto 16)));
+        dy := abs(signed(food_xy(15 downto 0)) - signed(head_xy_p1(15 downto 0)));
+        if reset = '1' then 
+            food_xy (31 downto 16) <= std_logic_vector(to_unsigned(food_begin_x, 16));
+            food_xy (15 downto 0) <= std_logic_vector(to_unsigned(food_begin_y, 16));
+            u_score_p1 <= to_unsigned(0, 16);
+            u_snake_length <= to_unsigned(snake_begin_length, 16);
+        elsif rising_edge(clk) then
+            -- snake head hits food
+            if (dx < head_width/2 and dy < head_width/2) then 
+                food_xy <= rand_xy;
+                u_snake_length <= u_snake_length + 1;
+            end if;   
+        end if;
     end process;
 
     move_snake_p1_component: move_snake
@@ -160,35 +175,21 @@ begin
         hc => hcount,
         vc => vcount,
         component_xys => snake_body_xy,
-         is_draw => is_body
+        valid_length => u_snake_length,
+        is_draw => is_body
         );
     
-           
-    set_food: process(reset, clk, food_xy, head_xy_p1)
-        variable dx, dy : signed (15 downto 0);
-    begin
-        dx := abs(signed(food_xy(31 downto 16)) - signed(head_xy_p1(31 downto 16)));
-        dy := abs(signed(food_xy(15 downto 0)) - signed(head_xy_p1(15 downto 0)));
-        if reset = '1' then 
-            food_xy (31 downto 16) <= std_logic_vector(to_unsigned(food_begin_x, 16));
-            food_xy (15 downto 0) <= std_logic_vector(to_unsigned(food_begin_y, 16));
-        elsif rising_edge(clk) then
-            -- snake head hits food
-            if (dx < head_width/2 and dy < head_width/2) then 
-                food_xy <= rand_xy;
-            end if;
-            
-        end if;
-    end process;
     
     rand_x_generator: random_number_gen
-    generic map (max => 640 - head_width)
+    generic map (max => screen_width - head_width, 
+                step => head_width)
     port map ( 
         clk => clk,
         random_number => rand_xy(31 downto 16) );
     
     rand_y_generator: random_number_gen
-    generic map (max => 480 - head_width)
+    generic map (max => screen_height - head_width,
+                step => head_width)
     port map ( 
         clk => clk,
         random_number => rand_xy (15 downto 0));   
