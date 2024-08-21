@@ -7,7 +7,7 @@ use work.common.all;
 
 entity draw_xys is
     Generic (
-        component_xys_length: integer := 100;
+        component_xys_length: integer := 15;
         hc_offset: integer:= 144;
         vc_offset: integer:= 35;
         component_width: integer:= 20

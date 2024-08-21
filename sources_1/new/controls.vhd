@@ -53,9 +53,10 @@ end component;
 signal ps2_out: STD_LOGIC_VECTOR (7 downto 0);
 signal ps2_valid: STD_LOGIC;
 signal button_direction: std_logic_vector (1 downto 0);
-signal keyboard_direction: std_logic_vector (1 downto 0);
-signal direction_reg: std_logic_vector (1 downto 0):= "00";
-signal direction_reg_2: std_logic_vector (1 downto 0):= "00";
+signal keyboard_direction_p1: std_logic_vector (1 downto 0);
+signal keyboard_direction_p2: std_logic_vector (1 downto 0);
+signal direction_reg: std_logic_vector (1 downto 0):= "10";
+signal direction_reg_2: std_logic_vector (1 downto 0):= "10";
 			
 begin
 U1: PS2
@@ -81,7 +82,7 @@ U1: PS2
         data => ps2_out,
         valid => ps2_valid,
         current_direction => direction_reg,
-        new_direction => keyboard_direction
+        new_direction => keyboard_direction_p1
 );
 
 P2_keyboard_controls: PS2_direction
@@ -97,7 +98,7 @@ P2_keyboard_controls: PS2_direction
         data => ps2_out,
         valid => ps2_valid,
         current_direction => direction_reg_2,
-        new_direction => direction_reg_2
+        new_direction => keyboard_direction_p2
 );
 
 P1_button_controls: btn_to_direction
@@ -111,25 +112,17 @@ P1_button_controls: btn_to_direction
         new_direction => button_direction
     );
 
--- assign direction for P1 with priority to keyboard
---process (clk, direction_reg, button_direction, keyboard_direction)
---begin
---    if rising_edge(clk) then
---        if (direction_reg /= keyboard_direction) then
---            direction_reg <= keyboard_direction;
---        else
---            direction_reg <= button_direction;
---        end if;
---    end if;
---end process;
 
-   direction_reg <= button_direction when button_en = '1' else
-                    keyboard_direction;
+   direction_reg <= "10" when clr ='1' else 
+                    button_direction when button_en = '1' else
+                    keyboard_direction_p1;
+                   
+   direction_reg_2 <= "10" when clr ='1' else 
+                    keyboard_direction_p2;
 
 
 direction_p1 <= direction_reg;
 direction_p2 <= direction_reg_2;
-
 
 
 end Behavioral;

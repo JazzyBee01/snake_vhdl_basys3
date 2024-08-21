@@ -1,9 +1,9 @@
 -- Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2019.2 (win64) Build 2708876 Wed Nov  6 21:40:23 MST 2019
--- Date        : Tue Aug 13 15:33:12 2024
+-- Date        : Wed Aug 21 13:05:54 2024
 -- Host        : LAPTOP-OLISM6J3 running 64-bit major release  (build 9200)
--- Command     : write_vhdl -force -mode funcsim {c:/Users/jazzm/Desktop/DocVoorSchool/EI op AP
+-- Command     : write_vhdl -force -mode funcsim {C:/Users/jazzm/Desktop/DocVoorSchool/EI op AP
 --               21-23/5-digital-systems/eindproject/snake_08_2024/snake_08_2024.srcs/sources_1/ip/clk_wiz_0/clk_wiz_0_sim_netlist.vhdl}
 -- Design      : clk_wiz_0
 -- Purpose     : This VHDL netlist is a functional simulation representation of the design and should not be modified or
@@ -78,12 +78,12 @@ clkout1_buf: unisim.vcomponents.BUFG
 mmcm_adv_inst: unisim.vcomponents.MMCME2_ADV
     generic map(
       BANDWIDTH => "OPTIMIZED",
-      CLKFBOUT_MULT_F => 9.125000,
+      CLKFBOUT_MULT_F => 36.375000,
       CLKFBOUT_PHASE => 0.000000,
       CLKFBOUT_USE_FINE_PS => false,
       CLKIN1_PERIOD => 10.000000,
       CLKIN2_PERIOD => 0.000000,
-      CLKOUT0_DIVIDE_F => 36.500000,
+      CLKOUT0_DIVIDE_F => 36.125000,
       CLKOUT0_DUTY_CYCLE => 0.500000,
       CLKOUT0_PHASE => 0.000000,
       CLKOUT0_USE_FINE_PS => false,
@@ -113,7 +113,7 @@ mmcm_adv_inst: unisim.vcomponents.MMCME2_ADV
       CLKOUT6_PHASE => 0.000000,
       CLKOUT6_USE_FINE_PS => false,
       COMPENSATION => "ZHOLD",
-      DIVCLK_DIVIDE => 1,
+      DIVCLK_DIVIDE => 4,
       IS_CLKINSEL_INVERTED => '0',
       IS_PSEN_INVERTED => '0',
       IS_PSINCDEC_INVERTED => '0',

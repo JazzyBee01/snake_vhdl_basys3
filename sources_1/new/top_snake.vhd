@@ -39,6 +39,15 @@ architecture Behavioral of top_snake is
             clk_out1: out STD_LOGIC);
     end component;
     
+    component clkdiv is 
+        generic(
+            division: integer:= 4);
+        port( 
+            clk : in STD_LOGIC; 
+            clr : in STD_LOGIC; 
+            slow_clk : out STD_LOGIC ); 
+    end component; 
+    
     component vga_sync is
     Port ( clk_25MHz : in STD_LOGIC;
            clr : in STD_LOGIC;
@@ -70,13 +79,19 @@ architecture Behavioral of top_snake is
     speed_sel: in std_logic_vector(1 downto 0);
     border_enable: in std_logic;
     direction_p1: in std_logic_vector(1 downto 0);
-    socre_p1: out unsigned (15 downto 0);
+    score_p1: out unsigned (15 downto 0);
     is_body: out std_logic;
     is_head: out std_logic;
     is_apple: out std_logic
     );
     end component;
     
+    component score_board is
+    Port ( clk_500Hz : in STD_LOGIC;
+           score : in unsigned (15 downto 0);
+           seg : out STD_LOGIC_VECTOR (6 downto 0);
+           an : out STD_LOGIC_VECTOR (3 downto 0));
+    end component;
     
     component draw
     Port ( 
@@ -91,6 +106,7 @@ architecture Behavioral of top_snake is
     end component;
    
     signal clk_25MHz: std_logic;
+    signal clk_500Hz: std_logic;
     signal vidon: std_logic;
     signal hc: std_logic_vector(9 downto 0);
     signal vc: std_logic_vector(9 downto 0);
@@ -98,14 +114,31 @@ architecture Behavioral of top_snake is
     signal is_body: std_logic;
     signal is_apple: std_logic;
     signal direction: std_logic_vector(1 downto 0);
+    signal score_p1:  unsigned (15 downto 0);
 
 begin
 
-    clk_25MHz_gen: clk_wiz_0
-        Port map(   
-            clk_in1 => clk,
-            clk_out1 => clk_25MHz);
+--    clk_25MHz_gen: clk_wiz_0 -- for VGA
+--        Port map(   
+--            clk_in1 => clk,
+--            clk_out1 => clk_25MHz);
+
+    clk_div_25MHz: clkdiv -- for VGA
+    generic map (
+        division => 4)
+    port map (
+        clk => clk,
+        clr => '0',
+        slow_clk => clk_25MHz);
             
+    clk_div_500Hz: clkdiv -- for seven segm
+    generic map (
+        division => 200000)
+    port map (
+        clk => clk,
+        clr => '0',
+        slow_clk => clk_500Hz);
+          
     U2: vga_sync
     port map (  
         clk_25MHz => clk_25MHz,
@@ -143,6 +176,13 @@ begin
 --        direction_p2 => led(1 downto 0)
     );
     
+    score_control: score_board
+    port map(
+        clk_500Hz => clk_500Hz,
+        score => score_p1,
+        seg => seg,
+        an => an);
+    
     game_logic_component: game_logic
     port map(
         clk => clk,
@@ -155,7 +195,8 @@ begin
         direction_p1 => direction,  
         is_body => is_body,  
         is_head => is_head, 
-        is_apple => is_apple  
+        is_apple => is_apple, 
+        score_p1 => score_p1
     );
     
     
