@@ -21,13 +21,11 @@ begin
         e1 := (score_int - (e3 * 1000) - (e2 * 100))/10;
         e0 := (score_int - (e3 * 1000) - (e2 * 100) - (e1*10));
         
-    bcd(15 downto 12) <= std_logic_vector(to_unsigned(e3, 4));
-    bcd(11 downto 8) <= std_logic_vector(to_unsigned(e2, 4));
-    bcd(7 downto 4) <= std_logic_vector(to_unsigned(e1, 4));
-    bcd(3 downto 0) <= std_logic_vector(to_unsigned(e0, 4));
+        bcd(15 downto 12) <= std_logic_vector(to_unsigned(e3, 4));
+        bcd(11 downto 8) <= std_logic_vector(to_unsigned(e2, 4));
+        bcd(7 downto 4) <= std_logic_vector(to_unsigned(e1, 4));
+        bcd(3 downto 0) <= std_logic_vector(to_unsigned(e0, 4));
  
-    end process;
-    
-
+     end process;
 
 end Behavioral;

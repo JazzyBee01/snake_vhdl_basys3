@@ -1,3 +1,39 @@
+----------------------------------------------------------------------------------
+-- Company: AP Hogeschool
+-- Engineer: Jazzmin De Bie
+-- 
+-- Create Date: 08.08.2024 17:52:27
+-- Module Name: Top_snake - Behavioral
+-- Project Name: Snake
+-- Target Devices: Basys3
+-- Tool Versions: Vivado 2019.2
+-- Description: 
+--      The top level of snake for Basys3
+--      VGA is driven at 640x480@60Hz
+
+--     Configuration
+--        SW(15) enables on board button controls
+--        SW(14) enables a border. Snake is wrapped around screen
+--        when border is disabled
+--        SW(1:0) sets the speed of the snake
+--            "00" => 1Hz
+--            "01" => 2Hz
+--            "10" => 4Hz
+--            "11" => 8Hz
+--     Controls
+--        when SW(15) = '1' use the buttons on the basys3 to control the snake
+--        else use QSDZ or ASDW on a USB keyboard
+
+-- Additional Comments:
+--    This project  was originally intended to have a 2-player breakout variant. Remenants of this can be found.
+--    Idea was canceled due to limit on LUT's and time.
+    
+--    The current snake_length_max is less than the amount of possible blocks on the screen
+--    This is also due to a limit in LUT's. 
+--    an alternative way of tracking the body should be used if the project is to be expanded. 
+        
+----------------------------------------------------------------------------------
+
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;

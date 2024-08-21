@@ -4,21 +4,17 @@ use IEEE.STD_LOGIC_unsigned.all;
 
 entity clkdiv is 
   generic(
-    division: integer:= 4 -- for 25Mhz 
-  );
+    division: integer:= 4);
   port( 
    clk : in STD_LOGIC; 
    clr : in STD_LOGIC; 
-   slow_clk : out STD_LOGIC 
-      ); 
+   slow_clk : out STD_LOGIC ); 
 end clkdiv; 
 
-
- 
 architecture behavioral of clkdiv is 
-signal q: integer range 0 to 100000000;
-signal slowclock: std_logic:= '0';
-
+    signal q: integer range 0 to 100000000;
+    signal slowclock: std_logic:= '0';
+    
 begin 
    
 process(clk, clr) 

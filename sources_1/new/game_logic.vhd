@@ -119,16 +119,16 @@ architecture Behavioral of game_logic is
            is_draw: out std_logic);
     end component;
     
-signal head_xy_p1: std_logic_vector(31 downto 0);
-signal apple_xy: std_logic_vector(31 downto 0);
-signal food_xy: std_logic_vector(31 downto 0);
-signal rand_xy: std_logic_vector(31 downto 0);
-signal u_score_p1: unsigned(15 downto 0);
-signal u_snake_length: unsigned(15 downto 0);
-signal snake_body_xy: xys (0 to snake_length_max -1);
-signal hit_border_p1: std_logic; 
---signal inited: std_logic:= '0';
-signal reset_snake: std_logic;
+    signal head_xy_p1: std_logic_vector(31 downto 0);
+    signal apple_xy: std_logic_vector(31 downto 0);
+    signal food_xy: std_logic_vector(31 downto 0);
+    signal rand_xy: std_logic_vector(31 downto 0);
+    signal u_score_p1: unsigned(15 downto 0);
+    signal u_snake_length: unsigned(15 downto 0);
+    signal snake_body_xy: xys (0 to snake_length_max -1);
+    signal hit_border_p1: std_logic; 
+    --signal inited: std_logic:= '0';
+    signal reset_snake: std_logic;
 
 begin
     

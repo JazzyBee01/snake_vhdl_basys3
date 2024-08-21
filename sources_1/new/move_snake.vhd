@@ -24,27 +24,25 @@ entity move_snake is
 end move_snake;
 
 architecture Behavioral of move_snake is
-type IntArray is array (0 to 3) of integer;
-constant delay_array: IntArray := (100000000,
-                                    50000000,
-                                    25000000,
-                                    12500000);
-signal count: integer:= 0;
-signal delay: integer:= 50000000;
-signal s_head_x: unsigned(15 downto 0);
-signal s_head_y: unsigned(15 downto 0);
-signal u_screen_width: unsigned(15 downto 0) := to_unsigned(screen_width, 16);
-signal u_screen_height: unsigned(15 downto 0) := to_unsigned(screen_height, 16);
-signal u_head_width: unsigned(15 downto 0) := to_unsigned(head_width, 16);
-signal s_snake_body_xy: xys (0 to snake_length_max - 1);
+    type IntArray is array (0 to 3) of integer;
+    constant delay_array: IntArray := (100000000,
+                                        50000000,
+                                        25000000,
+                                        12500000);
+    signal count: integer:= 0;
+    signal delay: integer:= 50000000;
+    signal s_head_x: unsigned(15 downto 0);
+    signal s_head_y: unsigned(15 downto 0);
+    signal u_screen_width: unsigned(15 downto 0) := to_unsigned(screen_width, 16);
+    signal u_screen_height: unsigned(15 downto 0) := to_unsigned(screen_height, 16);
+    signal u_head_width: unsigned(15 downto 0) := to_unsigned(head_width, 16);
+    signal s_snake_body_xy: xys (0 to snake_length_max - 1);
 
-    
 begin
-delay <= delay_array(to_integer(unsigned(speed_sel))) when unsigned(speed_sel) >= 0 or unsigned(speed_sel) <= 3 else
-         delay_array(1);
-
-move_snake: process(reset, clk, direction)
-
+    delay <= delay_array(to_integer(unsigned(speed_sel))) when unsigned(speed_sel) >= 0 or unsigned(speed_sel) <= 3 else
+             delay_array(1);
+    
+    move_snake: process(reset, clk, direction)
     begin
         if reset = '1' then
             s_head_x <= to_unsigned(snake_begin_pos_x, 16);
@@ -95,15 +93,11 @@ move_snake: process(reset, clk, direction)
                 s_snake_body_xy(i) <= s_snake_body_xy(i-1);
             end loop;
             s_snake_body_xy(0) <= std_logic_vector(s_head_x) & std_logic_vector(s_head_y);
-            
-            
             end if;
         end if;
     end process;
-    
-head_xy <= std_logic_vector(s_head_x) & std_logic_vector(s_head_y);
-snake_body_xy <= s_snake_body_xy;
-
-
+        
+    head_xy <= std_logic_vector(s_head_x) & std_logic_vector(s_head_y);
+    snake_body_xy <= s_snake_body_xy;
 
 end Behavioral;

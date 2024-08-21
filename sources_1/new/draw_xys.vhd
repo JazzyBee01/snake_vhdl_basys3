@@ -24,8 +24,8 @@ end draw_xys;
 
 architecture Behavioral of draw_xys is
 
-signal is_draw_array : std_logic_vector(0 to component_xys_length-1):= (others => '0');
-constant empty_array  : std_logic_vector (0 to component_xys_length -1) := (others => '0');
+    signal is_draw_array : std_logic_vector(0 to component_xys_length-1):= (others => '0');
+    constant empty_array  : std_logic_vector (0 to component_xys_length -1) := (others => '0');
 
 begin
 

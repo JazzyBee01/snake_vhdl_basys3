@@ -13,6 +13,7 @@ end BCD_TO_SEVEN_SEGM;
 architecture Behavioral of BCD_TO_SEVEN_SEGM is
 
 type t_segment_numerals_array is array (0 to 9) of STD_LOGIC_VECTOR (6 downto 0);
+    constant c_e: STD_LOGIC_VECTOR (6 downto 0):= "0000110";
     constant c_numerals_0_to_9: t_segment_numerals_array := (
                                "1000000", -- 0
                                "1111001", -- 1
@@ -25,19 +26,15 @@ type t_segment_numerals_array is array (0 to 9) of STD_LOGIC_VECTOR (6 downto 0)
                                "0000000", -- 8
                                "0010000"); -- 9
                                
-    constant c_e: STD_LOGIC_VECTOR (6 downto 0):= "0000110";
 begin
-
     an <= not(an_in);  
-    
-process (x)
-begin
-    if unsigned(x) <10 then
-        g_to_a <= c_numerals_0_to_9(to_integer(unsigned(x)));
-    else
-        g_to_a <= c_e; 
-    end if;
-
-end process;
+    process (x)
+    begin
+        if unsigned(x) <10 then
+            g_to_a <= c_numerals_0_to_9(to_integer(unsigned(x)));
+        else
+            g_to_a <= c_e; 
+        end if;
+    end process;
             
 end Behavioral;

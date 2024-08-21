@@ -22,42 +22,41 @@ entity PS2_direction is
 end PS2_direction;
 
 architecture Behavioral of PS2_direction is
-signal prev_valid, flag: std_logic; 
-signal direction: std_logic_vector (1 downto 0);
-
-
+    signal prev_valid, flag: std_logic; 
+    signal direction: std_logic_vector (1 downto 0);
+    
 begin
-process (clk, rst, current_direction) begin 
-    if rst = '1' then 
-        flag <= '0'; 
-        direction <= "00";   
-
-    elsif rising_edge (clk)then 
-        prev_valid <= valid;  
-        if (prev_valid = '1' and valid = '0') then   
---push key the first time check data at falling edge
-            
-            if (data = x"F0") then -- scan code for key release
-                flag <= '1';
-            else
-                if (data = scan_code_00) and current_direction /= "11" then
-                    direction <= "00";
-                elsif (data = scan_code_01) and current_direction /= "10" then
-                    direction <= "01";
-                elsif (data = scan_code_10) and current_direction /= "01" then
-                    direction <= "10";
-                elsif (data = scan_code_11) and current_direction /= "00" then
-                    direction <= "11";
+    process (clk, rst, current_direction) begin 
+        if rst = '1' then 
+            flag <= '0'; 
+            direction <= "00";   
+    
+        elsif rising_edge (clk)then 
+            prev_valid <= valid;  
+            if (prev_valid = '1' and valid = '0') then   
+    --push key the first time check data at falling edge
+                
+                if (data = x"F0") then -- scan code for key release
+                    flag <= '1';
                 else
-                    direction <= current_direction;
-                end if;
-                flag <= '0';
-            end if;  
-        end if;
-    end if;    
-end process;
-
-new_direction <= direction;
-
+                    if (data = scan_code_00) and current_direction /= "11" then
+                        direction <= "00";
+                    elsif (data = scan_code_01) and current_direction /= "10" then
+                        direction <= "01";
+                    elsif (data = scan_code_10) and current_direction /= "01" then
+                        direction <= "10";
+                    elsif (data = scan_code_11) and current_direction /= "00" then
+                        direction <= "11";
+                    else
+                        direction <= current_direction;
+                    end if;
+                    flag <= '0';
+                end if;  
+            end if;
+        end if;    
+    end process;
+    
+    new_direction <= direction;
+    
 end Behavioral;
 
