@@ -37,5 +37,4 @@ begin
     bcd_split(1) <= bcd(7  downto 4);
     bcd_split(0) <= bcd(3  downto 0);
 
-
 end Behavioral;

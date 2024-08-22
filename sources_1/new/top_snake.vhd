@@ -63,25 +63,19 @@ Port (  clk: in std_logic;
         an : out STD_LOGIC_VECTOR (3 downto 0);
         
         led: out std_logic_vector (15 downto 0)
-        );
-   
+);
         
 end top_snake;
 
 architecture Behavioral of top_snake is
-
-    component clk_wiz_0 is
-        Port ( clk_in1 : in STD_LOGIC; 
-            clk_out1: out STD_LOGIC);
-    end component;
     
     component clkdiv is 
-        generic(
-            division: integer:= 4);
-        port( 
-            clk : in STD_LOGIC; 
-            clr : in STD_LOGIC; 
-            slow_clk : out STD_LOGIC ); 
+    generic(
+        division: integer:= 4);
+    port( 
+        clk : in STD_LOGIC; 
+        clr : in STD_LOGIC; 
+        slow_clk : out STD_LOGIC ); 
     end component; 
     
     component vga_sync is
@@ -107,18 +101,18 @@ architecture Behavioral of top_snake is
     
     component game_logic is
     Port (
-    clk: in std_logic;
-    reset: in std_logic;
-    hcount: in std_logic_vector(9 downto 0); -- could require conversion for vga_sync
-    vcount: in  std_logic_vector(9 downto 0);
-    vidon: in std_logic;
-    speed_sel: in std_logic_vector(1 downto 0);
-    border_enable: in std_logic;
-    direction_p1: in std_logic_vector(1 downto 0);
-    score_p1: out unsigned (15 downto 0);
-    is_body: out std_logic;
-    is_head: out std_logic;
-    is_apple: out std_logic
+        clk: in std_logic;
+        reset: in std_logic;
+        hcount: in std_logic_vector(9 downto 0);
+        vcount: in  std_logic_vector(9 downto 0);
+        vidon: in std_logic;
+        speed_sel: in std_logic_vector(1 downto 0);
+        border_enable: in std_logic;
+        direction_p1: in std_logic_vector(1 downto 0);
+        score_p1: out unsigned (15 downto 0);
+        is_body: out std_logic;
+        is_head: out std_logic;
+        is_apple: out std_logic
     );
     end component;
     
@@ -153,11 +147,6 @@ architecture Behavioral of top_snake is
     signal score_p1:  unsigned (15 downto 0);
 
 begin
-
---    clk_25MHz_gen: clk_wiz_0 -- for VGA
---        Port map(   
---            clk_in1 => clk,
---            clk_out1 => clk_25MHz);
 
     clk_div_25MHz: clkdiv -- for VGA
     generic map (
@@ -234,11 +223,7 @@ begin
         is_apple => is_apple, 
         score_p1 => score_p1
     );
-    
-    
+     
     led(1 downto 0) <= direction;
-    
-
-
 
 end Behavioral;

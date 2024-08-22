@@ -46,5 +46,4 @@ end process;
 
 new_direction <= direction;
 
-
 end Behavioral;

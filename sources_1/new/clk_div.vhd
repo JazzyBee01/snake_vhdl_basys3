@@ -4,7 +4,7 @@ use IEEE.STD_LOGIC_unsigned.all;
 
 entity clkdiv is 
   generic(
-    division: integer:= 4);
+    division: integer:= 200000);
   port( 
    clk : in STD_LOGIC; 
    clr : in STD_LOGIC; 

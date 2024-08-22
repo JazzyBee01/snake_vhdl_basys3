@@ -59,11 +59,8 @@ begin
         end if;
         wait for 10ns;
     end process;
-    
+ 
     DUT: score_board
     port map( clk, score, seg, an);
-    
-
-
 
 end Behavioral;

@@ -112,14 +112,12 @@ begin
             new_direction => button_direction
         );
     
-    
        direction_reg <= "10" when clr ='1' else 
                         button_direction when button_en = '1' else
                         keyboard_direction_p1;
-                       
+             
        direction_reg_2 <= "10" when clr ='1' else 
                         keyboard_direction_p2;
-    
     
     direction_p1 <= direction_reg;
     direction_p2 <= direction_reg_2;
