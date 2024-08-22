@@ -27,7 +27,7 @@ Generic(
 --    border_width: integer;
 --    apple_width: integer;
     head_width: integer:= 40;
-    snake_length_max: integer:= 15;
+    snake_length_max: integer:= 50;
     snake_begin_length: integer:= 0;
     snake_begin_x: integer:= 40;
     snake_begin_y: integer:= 40;
@@ -144,10 +144,11 @@ begin
             food_xy (15 downto 0) <= std_logic_vector(to_unsigned(food_begin_y, 16));
             u_score_p1 <= to_unsigned(0, 16);
             u_snake_length <= to_unsigned(snake_begin_length, 16);
-            reset_snake <= '1';
+--            reset_snake <= '1';
             inited:='1';
         
         elsif rising_edge(clk) then
+            reset_snake <= '0';
             if border_enable = '1' and hit_border_p1 ='1' then
                 inited:='0';
             end if;
@@ -164,7 +165,7 @@ begin
             for i in snake_length_max - 1 downto 1 loop
             dx := abs(signed(head_xy_p1(31 downto 16)) - signed(snake_body_xy(i)(31 downto 16)));
             dy := abs(signed(head_xy_p1(15 downto 0))  - signed(snake_body_xy(i)(15 downto 0)));
-                if(i<=u_snake_length + 1)then
+                if(i<=u_snake_length)then
                     if(dx<head_width and dy<head_width)then
                         inited:='0';
                     end if;
